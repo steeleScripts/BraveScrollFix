@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#A script to repair the middleclick scroll issue with brave browser after an update
+bravepath=/usr/share/applications/brave-browser.desktop
+
+#tests to see if the file has the middleclick scroll flag enabled
+grep MiddleClickAutoscroll $bravepath > /dev/null
+exists=$?
+
+fixBrave() {
+    sed -i 's/^Exec=brave/Exec=brave --enable-blink-features=MiddleClickAutoscroll/g' $bravepath
+    killall brave
+    update-desktop-database
+    echo "Middle click scroll ready to use!"    
+    exit 0
+}
+
+if [[ $exists != 0 ]] 
+then    
+    fixBrave
+fi
+
+echo "Middle click scroll already enabled!"
+exit 3
